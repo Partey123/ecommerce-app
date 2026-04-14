@@ -1,0 +1,83 @@
+.profile-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #09090b 0%, #18181b 30%, #fafaf9 30%, #fafaf9 100%);
+  padding: 1.25rem;
+}
+
+.profile-card {
+  width: min(760px, 100%);
+  margin: 1.2rem auto;
+  background: #ffffff;
+  border: 1px solid #e4e4e7;
+  border-radius: 1.5rem;
+  box-shadow: 0 28px 50px -42px rgba(9, 9, 11, 0.8);
+  padding: 1.35rem;
+}
+
+.profile-kicker {
+  margin: 0;
+  color: #52525b;
+  font-size: 0.84rem;
+}
+
+.profile-card h1 {
+  margin: 0.55rem 0 0;
+  font-family: "Playfair Display", Georgia, serif;
+}
+
+.profile-card p {
+  color: #3f3f46;
+}
+
+.profile-grid {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.profile-grid article {
+  background: #f4f4f5;
+  border: 1px solid #e4e4e7;
+  border-radius: 1rem;
+  padding: 0.9rem;
+}
+
+.profile-grid span {
+  color: #52525b;
+  font-size: 0.85rem;
+}
+
+.profile-grid strong {
+  display: block;
+  margin-top: 0.4rem;
+}
+
+.profile-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.55rem;
+}
+
+.profile-btn {
+  border-radius: 999px;
+  padding: 0.6rem 0.95rem;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.profile-btn-secondary {
+  border: 1px solid #d4d4d8;
+  color: #111827;
+}
+
+.profile-btn-primary {
+  background: #111827;
+  color: #fafafa;
+}
+
+@media (max-width: 760px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+}

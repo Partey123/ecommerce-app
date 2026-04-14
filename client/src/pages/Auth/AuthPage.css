@@ -127,6 +127,20 @@
   color: #a1a1aa;
 }
 
+.auth-otp-row {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(2.3rem, 1fr));
+  gap: 0.42rem;
+}
+
+.auth-otp-input {
+  text-align: center;
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: 0.65rem !important;
+  padding: 0.7rem 0.3rem !important;
+}
+
 .auth-submit,
 .auth-google-btn {
   border: none;

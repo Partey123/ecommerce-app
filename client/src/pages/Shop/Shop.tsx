@@ -1,6 +1,15 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Bell, LayoutDashboard, Search, ShoppingBag, Sparkles } from "lucide-react";
+import {
+  Bell,
+  ChevronDown,
+  Home,
+  LayoutDashboard,
+  Search,
+  ShoppingBag,
+  Sparkles,
+  User,
+} from "lucide-react";
 import { useAuth } from "../../features/auth/useAuth";
 import { supabaseClient } from "../../lib/supabaseClient";
 import "./Shop.css";
@@ -31,6 +40,7 @@ const featured = [
 
 const Shop = () => {
   const { user } = useAuth();
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const currency = useMemo(
     () =>
       new Intl.NumberFormat("en-GH", {
@@ -48,37 +58,95 @@ const Shop = () => {
     (user?.user_metadata?.role as string | undefined) ??
     (user?.app_metadata?.role as string | undefined) ??
     "user";
+  const userLabel = useMemo(() => {
+    if (!user) return "";
+    return (
+      (user.user_metadata?.full_name as string | undefined) ??
+      user.email?.split("@")[0] ??
+      "User"
+    );
+  }, [user]);
+  const avatarText = useMemo(
+    () =>
+      userLabel
+        .split(" ")
+        .filter(Boolean)
+        .map((part) => part[0]?.toUpperCase() ?? "")
+        .slice(0, 2)
+        .join("") || "U",
+    [userLabel]
+  );
 
   return (
     <main className="shop-page">
       <header className="shop-navbar">
         <div className="shop-logo">LuxeMart Shop</div>
-        <div className="shop-nav-center">
-          <button type="button" className="shop-icon-btn">
-            <Search size={16} />
-            Search
-          </button>
-          <button type="button" className="shop-icon-btn">
-            <Bell size={16} />
-            Alerts
-          </button>
-        </div>
         <div className="shop-nav-actions">
-          <Link to="/" className="shop-link-btn">
-            Home
+          <button type="button" className="shop-icon-only-btn" aria-label="Search">
+            <Search size={16} />
+          </button>
+          <button type="button" className="shop-icon-only-btn" aria-label="Alerts">
+            <Bell size={16} />
+          </button>
+          <Link to="/" className="shop-icon-only-btn" aria-label="Home">
+            <Home size={16} />
           </Link>
           {role === "admin" ? (
-            <Link to="/admin" className="shop-link-btn">
-              Admin
+            <Link to="/admin" className="shop-icon-only-btn" aria-label="Admin Dashboard">
+              <LayoutDashboard size={16} />
             </Link>
           ) : null}
           {user ? (
-            <button type="button" className="shop-primary-btn" onClick={handleSignOut}>
-              Sign Out
-            </button>
+            <div className="shop-profile-menu-wrap">
+              <button
+                type="button"
+                className="shop-avatar-btn"
+                onClick={() => setIsProfileMenuOpen((previous) => !previous)}
+              >
+                <span className="shop-avatar-pill">{avatarText}</span>
+                <ChevronDown size={14} />
+              </button>
+
+              {isProfileMenuOpen ? (
+                <div className="shop-profile-menu">
+                  <div className="shop-profile-menu-header">
+                    <span>{userLabel}</span>
+                    <small>{user.email}</small>
+                  </div>
+                  <Link
+                    to="/profile"
+                    className="shop-profile-menu-item"
+                    onClick={() => setIsProfileMenuOpen(false)}
+                  >
+                    <User size={14} />
+                    Profile
+                  </Link>
+                  {role === "admin" ? (
+                    <Link
+                      to="/admin"
+                      className="shop-profile-menu-item"
+                      onClick={() => setIsProfileMenuOpen(false)}
+                    >
+                      <LayoutDashboard size={14} />
+                      Admin Dashboard
+                    </Link>
+                  ) : null}
+                  <button
+                    type="button"
+                    className="shop-profile-menu-item"
+                    onClick={async () => {
+                      setIsProfileMenuOpen(false);
+                      await handleSignOut();
+                    }}
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              ) : null}
+            </div>
           ) : (
-            <Link to="/auth" className="shop-primary-btn">
-              Sign In
+            <Link to="/auth" className="shop-icon-only-btn" aria-label="Sign In">
+              <User size={16} />
             </Link>
           )}
         </div>

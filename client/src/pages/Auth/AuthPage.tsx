@@ -76,7 +76,8 @@ const AuthPage = ({ initialMode = "signin" }: AuthPageProps) => {
         });
 
         if (error) throw error;
-        setSuccessMessage("Account created. Check your email to confirm your account.");
+        setSuccessMessage("Account created. Check your email for your 6-digit verification code.");
+        navigate(`/auth/verify?email=${encodeURIComponent(email)}`);
       } else {
         const { error } = await supabaseClient.auth.signInWithPassword({
           email,

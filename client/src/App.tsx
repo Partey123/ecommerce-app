@@ -4,6 +4,7 @@ import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import { AuthProvider } from "./features/auth/authContext";
 import ResetPassword from "./pages/Auth/ResetPassword";
+import Verification from "./pages/Auth/Verification";
 import Shop from "./pages/Shop/Shop";
 import AdminRoute from "./routes/AdminRoute";
 import AdminLayout from "./pages/Admin/AdminLayout";
@@ -18,6 +19,7 @@ import UserDetails from "./pages/Admin/Users/UserDetails";
 import CategoryManager from "./pages/Admin/Categories/CategoryManager";
 import SalesChart from "./pages/Admin/Analytics/SalesChart";
 import StoreSettings from "./pages/Admin/Settings/StoreSettings";
+import Profile from "./pages/Profile/Profile";
 
 function App() {
   return (
@@ -26,6 +28,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/shop" element={<Shop />} />
+          <Route path="/profile" element={<Profile />} />
           <Route
             path="/admin"
             element={
@@ -50,6 +53,7 @@ function App() {
           <Route path="/auth/signin" element={<Login />} />
           <Route path="/auth/signup" element={<Register />} />
           <Route path="/auth/reset-password" element={<ResetPassword />} />
+          <Route path="/auth/verify" element={<Verification />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
