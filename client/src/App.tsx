@@ -1,5 +1,6 @@
 import Landing from "./pages/landing/Landing";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useRef } from "react";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import { AuthProvider } from "./features/auth/authContext";
@@ -20,13 +21,86 @@ import CategoryManager from "./pages/Admin/Categories/CategoryManager";
 import SalesChart from "./pages/Admin/Analytics/SalesChart";
 import StoreSettings from "./pages/Admin/Settings/StoreSettings";
 import Profile from "./pages/Profile/Profile";
+import { useAuth } from "./features/auth/useAuth";
+
+const getRole = (userRole?: string) => (userRole === "admin" ? "admin" : "user");
+
+const DashboardRoute = () => {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <div style={{ padding: "2rem" }}>Loading dashboard...</div>;
+  }
+
+  if (!user) {
+    return <Navigate to="/auth/signin" replace />;
+  }
+
+  const role = getRole(
+    (user.user_metadata?.role as string | undefined) ??
+      (user.app_metadata?.role as string | undefined)
+  );
+
+  return <Navigate to={role === "admin" ? "/admin" : "/shop"} replace />;
+};
+
+const HomeRoute = () => {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <div style={{ padding: "2rem" }}>Loading...</div>;
+  }
+
+  return user ? <Navigate to="/dashboard" replace /> : <Landing />;
+};
+
+const RoleChangeRedirect = () => {
+  const { user, isLoading } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const previousRoleRef = useRef<string | null>(null);
+
+  const role = useMemo(
+    () =>
+      getRole(
+        (user?.user_metadata?.role as string | undefined) ??
+          (user?.app_metadata?.role as string | undefined)
+      ),
+    [user]
+  );
+
+  useEffect(() => {
+    if (isLoading || !user) {
+      previousRoleRef.current = null;
+      return;
+    }
+
+    if (previousRoleRef.current === null) {
+      previousRoleRef.current = role;
+      return;
+    }
+
+    if (previousRoleRef.current !== role) {
+      const targetPath = role === "admin" ? "/admin" : "/shop";
+      if (location.pathname !== targetPath) {
+        navigate(targetPath, { replace: true });
+      }
+    }
+
+    previousRoleRef.current = role;
+  }, [isLoading, location.pathname, navigate, role, user]);
+
+  return null;
+};
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <RoleChangeRedirect />
         <Routes>
-          <Route path="/" element={<Landing />} />
+          <Route path="/" element={<HomeRoute />} />
+          <Route path="/dashboard" element={<DashboardRoute />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/profile" element={<Profile />} />
           <Route

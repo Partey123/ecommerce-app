@@ -26,7 +26,7 @@ const AuthPage = ({ initialMode = "signin" }: AuthPageProps) => {
 
   useEffect(() => {
     if (!authLoading && user) {
-      navigate("/", { replace: true });
+      navigate("/dashboard", { replace: true });
     }
   }, [authLoading, user, navigate]);
 
@@ -85,7 +85,7 @@ const AuthPage = ({ initialMode = "signin" }: AuthPageProps) => {
         });
 
         if (error) throw error;
-        navigate("/", { replace: true });
+        navigate("/dashboard", { replace: true });
       }
     } catch (error) {
       const message =
@@ -104,7 +104,7 @@ const AuthPage = ({ initialMode = "signin" }: AuthPageProps) => {
       const { error } = await supabaseClient.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/`,
+          redirectTo: `${window.location.origin}/dashboard`,
         },
       });
 

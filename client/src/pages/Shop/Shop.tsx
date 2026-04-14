@@ -79,138 +79,146 @@ const Shop = () => {
 
   return (
     <main className="shop-page">
-      <header className="shop-navbar">
-        <div className="shop-logo">LuxeMart Shop</div>
-        <div className="shop-nav-actions">
-          <button type="button" className="shop-icon-only-btn" aria-label="Search">
-            <Search size={16} />
-          </button>
-          <button type="button" className="shop-icon-only-btn" aria-label="Alerts">
-            <Bell size={16} />
-          </button>
-          <Link to="/" className="shop-icon-only-btn" aria-label="Home">
-            <Home size={16} />
-          </Link>
-          {role === "admin" ? (
-            <Link to="/admin" className="shop-icon-only-btn" aria-label="Admin Dashboard">
-              <LayoutDashboard size={16} />
+      <div className="shop-shell">
+        <header className="shop-navbar">
+          <div className="shop-logo-wrap">
+            <div className="shop-logo-mark">L</div>
+            <div className="shop-logo-copy">
+              <strong>LuxeMart</strong>
+              <span>Premium Storefront</span>
+            </div>
+          </div>
+          <div className="shop-nav-actions">
+            <button type="button" className="shop-icon-only-btn" aria-label="Search">
+              <Search size={16} />
+            </button>
+            <button type="button" className="shop-icon-only-btn" aria-label="Alerts">
+              <Bell size={16} />
+            </button>
+            <Link to="/" className="shop-icon-only-btn" aria-label="Home">
+              <Home size={16} />
             </Link>
-          ) : null}
-          {user ? (
-            <div className="shop-profile-menu-wrap">
-              <button
-                type="button"
-                className="shop-avatar-btn"
-                onClick={() => setIsProfileMenuOpen((previous) => !previous)}
-              >
-                <span className="shop-avatar-pill">{avatarText}</span>
-                <ChevronDown size={14} />
-              </button>
+            {role === "admin" ? (
+              <Link to="/admin" className="shop-icon-only-btn" aria-label="Admin Dashboard">
+                <LayoutDashboard size={16} />
+              </Link>
+            ) : null}
+            {user ? (
+              <div className="shop-profile-menu-wrap">
+                <button
+                  type="button"
+                  className="shop-avatar-btn"
+                  onClick={() => setIsProfileMenuOpen((previous) => !previous)}
+                >
+                  <span className="shop-avatar-pill">{avatarText}</span>
+                  <ChevronDown size={14} />
+                </button>
 
-              {isProfileMenuOpen ? (
-                <div className="shop-profile-menu">
-                  <div className="shop-profile-menu-header">
-                    <span>{userLabel}</span>
-                    <small>{user.email}</small>
-                  </div>
-                  <Link
-                    to="/profile"
-                    className="shop-profile-menu-item"
-                    onClick={() => setIsProfileMenuOpen(false)}
-                  >
-                    <User size={14} />
-                    Profile
-                  </Link>
-                  {role === "admin" ? (
+                {isProfileMenuOpen ? (
+                  <div className="shop-profile-menu">
+                    <div className="shop-profile-menu-header">
+                      <span>{userLabel}</span>
+                      <small>{user.email}</small>
+                    </div>
                     <Link
-                      to="/admin"
+                      to="/profile"
                       className="shop-profile-menu-item"
                       onClick={() => setIsProfileMenuOpen(false)}
                     >
-                      <LayoutDashboard size={14} />
-                      Admin Dashboard
+                      <User size={14} />
+                      Profile
                     </Link>
-                  ) : null}
-                  <button
-                    type="button"
-                    className="shop-profile-menu-item"
-                    onClick={async () => {
-                      setIsProfileMenuOpen(false);
-                      await handleSignOut();
-                    }}
-                  >
-                    Sign Out
-                  </button>
-                </div>
-              ) : null}
-            </div>
-          ) : (
-            <Link to="/auth" className="shop-icon-only-btn" aria-label="Sign In">
-              <User size={16} />
-            </Link>
-          )}
-        </div>
-      </header>
+                    {role === "admin" ? (
+                      <Link
+                        to="/admin"
+                        className="shop-profile-menu-item"
+                        onClick={() => setIsProfileMenuOpen(false)}
+                      >
+                        <LayoutDashboard size={14} />
+                        Admin Dashboard
+                      </Link>
+                    ) : null}
+                    <button
+                      type="button"
+                      className="shop-profile-menu-item"
+                      onClick={async () => {
+                        setIsProfileMenuOpen(false);
+                        await handleSignOut();
+                      }}
+                    >
+                      Sign Out
+                    </button>
+                  </div>
+                ) : null}
+              </div>
+            ) : (
+              <Link to="/auth" className="shop-icon-only-btn" aria-label="Sign In">
+                <User size={16} />
+              </Link>
+            )}
+          </div>
+        </header>
 
-      <section className="shop-hero-card">
-        <p className="shop-kicker">
-          <Sparkles size={14} /> Premium Commerce Dashboard
-        </p>
-        <h1>{user ? "Welcome back to your LuxeMart dashboard." : "Explore LuxeMart like a member."}</h1>
-        <p>
-          {user
-            ? "Track your latest activity, discover new arrivals, and continue shopping with a personalized experience."
-            : "Browse premium collections as a guest, then sign in to unlock saved carts, order tracking, and member-only drops."}
-        </p>
-        <div className="shop-hero-actions">
-          <button type="button" className="shop-primary-btn">
-            <ShoppingBag size={16} /> Start Shopping
-          </button>
-          {user ? (
-            <button type="button" className="shop-link-btn">
-              <LayoutDashboard size={16} /> Open My Dashboard
+        <section className="shop-hero-card">
+          <p className="shop-kicker">
+            <Sparkles size={14} /> Premium Commerce Dashboard
+          </p>
+          <h1>{user ? "Welcome back to your LuxeMart dashboard." : "Explore LuxeMart like a member."}</h1>
+          <p>
+            {user
+              ? "Track your latest activity, discover new arrivals, and continue shopping with a personalized experience."
+              : "Browse premium collections as a guest, then sign in to unlock saved carts, order tracking, and member-only drops."}
+          </p>
+          <div className="shop-hero-actions">
+            <button type="button" className="shop-primary-btn">
+              <ShoppingBag size={16} /> Start Shopping
             </button>
-          ) : (
-            <Link to="/auth/signup" className="shop-link-btn">
-              Create Account
-            </Link>
-          )}
-        </div>
-      </section>
+            {user ? (
+              <Link to="/profile" className="shop-link-btn">
+                <LayoutDashboard size={16} /> Open My Dashboard
+              </Link>
+            ) : (
+              <Link to="/auth/signup" className="shop-link-btn">
+                Create Account
+              </Link>
+            )}
+          </div>
+        </section>
 
-      <section className="shop-stats-grid">
-        <article>
-          <span>Collections</span>
-          <strong>42</strong>
-        </article>
-        <article>
-          <span>New This Week</span>
-          <strong>17</strong>
-        </article>
-        <article>
-          <span>Avg Delivery</span>
-          <strong>24h</strong>
-        </article>
-        <article>
-          <span>Member Savings</span>
-          <strong>Up to 18%</strong>
-        </article>
-      </section>
-
-      <section className="shop-products-grid">
-        {featured.map((product) => (
-          <article key={product.id} className="shop-product-card">
-            <img src={product.image} alt={product.name} />
-            <div className="shop-product-meta">
-              <h3>{product.name}</h3>
-              <strong>{currency.format(product.price)}</strong>
-              <button type="button" className="shop-primary-btn">
-                Add to Cart
-              </button>
-            </div>
+        <section className="shop-stats-grid">
+          <article>
+            <span>Collections</span>
+            <strong>42</strong>
           </article>
-        ))}
-      </section>
+          <article>
+            <span>New This Week</span>
+            <strong>17</strong>
+          </article>
+          <article>
+            <span>Avg Delivery</span>
+            <strong>24h</strong>
+          </article>
+          <article>
+            <span>Member Savings</span>
+            <strong>Up to 18%</strong>
+          </article>
+        </section>
+
+        <section className="shop-products-grid">
+          {featured.map((product) => (
+            <article key={product.id} className="shop-product-card">
+              <img src={product.image} alt={product.name} />
+              <div className="shop-product-meta">
+                <h3>{product.name}</h3>
+                <strong>{currency.format(product.price)}</strong>
+                <button type="button" className="shop-primary-btn">
+                  Add to Cart
+                </button>
+              </div>
+            </article>
+          ))}
+        </section>
+      </div>
     </main>
   );
 };

@@ -1,16 +1,23 @@
 .shop-page {
   min-height: 100vh;
-  background: linear-gradient(180deg, #09090b 0%, #18181b 28%, #fafaf9 28%, #fafaf9 100%);
-  padding: 1rem 1rem 2rem;
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(34, 197, 94, 0.14), transparent 45%),
+    radial-gradient(1100px 550px at 100% 0%, rgba(59, 130, 246, 0.16), transparent 40%),
+    linear-gradient(180deg, #09090b 0%, #18181b 34%, #f8fafc 34%, #f8fafc 100%);
+  padding: 1rem 1rem 2.5rem;
   color: #18181b;
+}
+
+.shop-shell {
+  width: min(1140px, 100%);
+  margin-inline: auto;
 }
 
 .shop-navbar,
 .shop-hero-card,
 .shop-stats-grid,
 .shop-products-grid {
-  width: min(1120px, 100%);
-  margin-inline: auto;
+  width: 100%;
 }
 
 .shop-navbar {
@@ -26,20 +33,89 @@
   backdrop-filter: blur(12px);
 }
 
-.shop-logo {
-  color: #fafafa;
-  font-weight: 800;
+.shop-logo-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
 }
 
-.shop-nav-center,
+.shop-logo-mark {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: #fafafa;
+  color: #111827;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+}
+
+.shop-logo-copy {
+  display: grid;
+  color: #f8fafc;
+}
+
+.shop-logo-copy strong {
+  font-size: 0.92rem;
+  line-height: 1;
+}
+
+.shop-logo-copy span {
+  font-size: 0.72rem;
+  color: #d4d4d8;
+}
+
 .shop-nav-actions {
   display: inline-flex;
-  gap: 0.5rem;
+  gap: 0.42rem;
   align-items: center;
+  margin-left: auto;
 }
 
-.shop-nav-actions {
-  margin-left: auto;
+.shop-link-btn,
+.shop-primary-btn {
+  border-radius: 999px;
+  border: 0;
+  padding: 0.55rem 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  text-decoration: none;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.shop-icon-only-btn {
+  width: 2.15rem;
+  height: 2.15rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.12);
+  color: #f5f5f5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.shop-icon-only-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.shop-link-btn {
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid #d4d4d8;
+}
+
+.shop-primary-btn {
+  background: #111827;
+  color: #fafafa;
+  border: 1px solid #111827;
 }
 
 .shop-profile-menu-wrap {
@@ -120,67 +196,27 @@
   background: #f8fafc;
 }
 
-.shop-icon-btn,
-.shop-link-btn,
-.shop-primary-btn {
-  border-radius: 999px;
-  border: 0;
-  padding: 0.55rem 0.95rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  text-decoration: none;
-  font-family: inherit;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.shop-icon-only-btn {
-  width: 2.15rem;
-  height: 2.15rem;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.12);
-  color: #f5f5f5;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.shop-icon-only-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.shop-icon-btn,
-.shop-link-btn {
-  background: rgba(255, 255, 255, 0.12);
-  color: #f5f5f5;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.shop-primary-btn {
-  background: #fafafa;
-  color: #111827;
-}
-
 .shop-hero-card {
-  margin-top: 1rem;
-  border-radius: 1.5rem;
-  background: #ffffff;
-  padding: 1.5rem;
-  box-shadow: 0 28px 50px -42px rgba(9, 9, 11, 0.8);
+  margin-top: 1.15rem;
+  border-radius: 1.3rem;
+  background:
+    linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.95)),
+    linear-gradient(180deg, #0f172a, #111827);
+  color: #f8fafc;
+  padding: 1.65rem;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  box-shadow: 0 28px 60px -46px rgba(2, 6, 23, 0.95);
 }
 
 .shop-kicker {
   margin: 0;
-  font-size: 0.85rem;
-  color: #52525b;
+  font-size: 0.8rem;
+  color: #cbd5e1;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .shop-hero-card h1 {
@@ -191,8 +227,8 @@
 
 .shop-hero-card p {
   margin: 0.7rem 0 0;
-  color: #3f3f46;
-  max-width: 780px;
+  color: #dbeafe;
+  max-width: 700px;
   line-height: 1.65;
 }
 
@@ -204,21 +240,22 @@
 }
 
 .shop-stats-grid {
-  margin-top: 1rem;
+  margin-top: 0.95rem;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.8rem;
 }
 
 .shop-stats-grid article {
-  background: #f4f4f5;
-  border: 1px solid #e4e4e7;
-  border-radius: 1.5rem;
-  padding: 1rem;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 1rem;
+  padding: 0.95rem;
+  box-shadow: 0 15px 30px -25px rgba(15, 23, 42, 0.45);
 }
 
 .shop-stats-grid span {
-  color: #52525b;
+  color: #6b7280;
   font-size: 0.85rem;
 }
 
@@ -229,27 +266,28 @@
 }
 
 .shop-products-grid {
-  margin-top: 1rem;
+  margin-top: 1.05rem;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.9rem;
+  gap: 0.95rem;
 }
 
 .shop-product-card {
   overflow: hidden;
-  border-radius: 1.5rem;
+  border-radius: 1rem;
   background: #fff;
-  border: 1px solid #e4e4e7;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 18px 36px -30px rgba(15, 23, 42, 0.6);
 }
 
 .shop-product-card img {
   width: 100%;
-  height: 220px;
+  height: 240px;
   object-fit: cover;
 }
 
 .shop-product-meta {
-  padding: 1rem;
+  padding: 0.95rem;
   display: grid;
   gap: 0.6rem;
 }
@@ -259,10 +297,34 @@
 }
 
 @media (max-width: 980px) {
+  .shop-logo-copy span {
+    display: none;
+  }
+
   .shop-stats-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .shop-products-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .shop-page {
+    padding-inline: 0.75rem;
+  }
+
+  .shop-navbar {
+    border-radius: 1rem;
+    padding: 0.6rem;
+  }
+
+  .shop-hero-card {
+    padding: 1.2rem;
+  }
+
+  .shop-stats-grid,
   .shop-products-grid {
     grid-template-columns: 1fr;
   }
