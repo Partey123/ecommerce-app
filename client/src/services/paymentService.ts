@@ -1,4 +1,6 @@
-﻿export const paymentService = {
-  ready: true,
+export const paymentService = {
+  initializePayment() {
+    throw new Error("Paystack initialization is not wired yet.");
+  },
 };
 

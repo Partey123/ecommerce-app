@@ -1,4 +1,10 @@
-﻿export const orderStatus = {
-  ready: true,
-};
+export const ORDER_STATUS = {
+  PENDING: "PENDING",
+  PAID: "PAID",
+  SHIPPED: "SHIPPED",
+  DELIVERED: "DELIVERED",
+  CANCELLED: "CANCELLED",
+} as const;
+
+export type OrderStatus = (typeof ORDER_STATUS)[keyof typeof ORDER_STATUS];
 

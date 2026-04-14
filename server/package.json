@@ -21,5 +21,12 @@
     "@types/node": "^24.12.2",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.103.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "paystack": "^2.0.1",
+    "resend": "^6.11.0"
   }
 }
