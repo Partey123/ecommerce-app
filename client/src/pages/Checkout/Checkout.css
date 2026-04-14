@@ -1,0 +1,52 @@
+.checkout-page {
+  min-height: 100vh;
+  background: #f8fafc;
+  padding: 1.25rem;
+}
+
+.checkout-card {
+  width: min(920px, 100%);
+  margin: 0 auto;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+.checkout-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkout-items {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.checkout-item {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.checkout-item h3,
+.checkout-item p {
+  margin: 0;
+}
+
+.checkout-summary {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.checkout-message {
+  margin-top: 0.75rem;
+}

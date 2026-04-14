@@ -7,6 +7,7 @@ import { AuthProvider } from "./features/auth/authContext";
 import ResetPassword from "./pages/Auth/ResetPassword";
 import Verification from "./pages/Auth/Verification";
 import Shop from "./pages/Shop/Shop";
+import Checkout from "./pages/Checkout/Checkout";
 import AdminRoute from "./routes/AdminRoute";
 import AdminLayout from "./pages/Admin/AdminLayout";
 import Overview from "./pages/Admin/Overview";
@@ -22,6 +23,7 @@ import SalesChart from "./pages/Admin/Analytics/SalesChart";
 import StoreSettings from "./pages/Admin/Settings/StoreSettings";
 import Profile from "./pages/Profile/Profile";
 import { useAuth } from "./features/auth/useAuth";
+import NotFound from "./pages/NotFound";
 
 const getRole = (userRole?: string) => (userRole === "admin" ? "admin" : "user");
 
@@ -102,6 +104,7 @@ function App() {
           <Route path="/" element={<HomeRoute />} />
           <Route path="/dashboard" element={<DashboardRoute />} />
           <Route path="/shop" element={<Shop />} />
+          <Route path="/checkout" element={<Checkout />} />
           <Route path="/profile" element={<Profile />} />
           <Route
             path="/admin"
@@ -128,7 +131,7 @@ function App() {
           <Route path="/auth/signup" element={<Register />} />
           <Route path="/auth/reset-password" element={<ResetPassword />} />
           <Route path="/auth/verify" element={<Verification />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

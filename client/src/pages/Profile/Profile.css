@@ -76,6 +76,108 @@
   color: #fafafa;
 }
 
+.profile-orders {
+  margin-top: 1rem;
+}
+
+.profile-orders h2 {
+  margin: 0.45rem 0 0;
+  font-size: 1.25rem;
+}
+
+.profile-orders-lead {
+  margin: 0.4rem 0 0;
+  color: #52525b;
+  font-size: 0.9rem;
+}
+
+.profile-orders-muted {
+  margin-top: 0.75rem;
+  color: #71717a;
+  font-size: 0.92rem;
+}
+
+.profile-orders-error {
+  margin-top: 0.75rem;
+  color: #b91c1c;
+  font-size: 0.92rem;
+}
+
+.profile-order-list {
+  list-style: none;
+  margin: 0.85rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.profile-order-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 0.85rem;
+  background: #fafafa;
+  border: 1px solid #e4e4e7;
+  border-radius: 0.85rem;
+}
+
+.profile-order-id {
+  display: block;
+  font-weight: 700;
+  color: #18181b;
+  font-size: 0.88rem;
+}
+
+.profile-order-date {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.8rem;
+  color: #71717a;
+}
+
+.profile-order-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
+}
+
+.profile-order-total {
+  font-weight: 700;
+  color: #111827;
+}
+
+.profile-order-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+}
+
+.profile-order-badge--pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+.profile-order-badge--paid {
+  background: #dcfce7;
+  color: #166534;
+}
+.profile-order-badge--shipped {
+  background: #dbeafe;
+  color: #1e3a8a;
+}
+.profile-order-badge--delivered {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+.profile-order-badge--cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
 @media (max-width: 760px) {
   .profile-grid {
     grid-template-columns: 1fr;

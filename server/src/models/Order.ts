@@ -25,6 +25,16 @@ export type OrderItemInsert = {
   unit_price_ghs: number;
 };
 
+export type OrderItemRow = {
+  id: string;
+  order_id: string;
+  product_id: string | null;
+  product_name: string;
+  quantity: number;
+  unit_price_ghs: number;
+  created_at: string;
+};
+
 export const OrderModel = {
   async listByUser(userId: string): Promise<OrderRow[]> {
     const { data, error } = await supabase
@@ -43,6 +53,26 @@ export const OrderModel = {
       .order("created_at", { ascending: false });
     if (error) throw error;
     return (data ?? []) as OrderRow[];
+  },
+
+  async getById(orderId: string): Promise<OrderRow | null> {
+    const { data, error } = await supabase
+      .from("orders")
+      .select("*")
+      .eq("id", orderId)
+      .maybeSingle();
+    if (error) throw error;
+    return (data as OrderRow | null) ?? null;
+  },
+
+  async listItems(orderId: string): Promise<OrderItemRow[]> {
+    const { data, error } = await supabase
+      .from("order_items")
+      .select("*")
+      .eq("order_id", orderId)
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    return (data ?? []) as OrderItemRow[];
   },
 
   async create(payload: {

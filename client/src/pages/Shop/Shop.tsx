@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Bell,
@@ -7,49 +7,57 @@ import {
   LayoutDashboard,
   Search,
   ShoppingBag,
+  ShoppingCart,
   Sparkles,
   User,
 } from "lucide-react";
 import { useAuth } from "../../features/auth/useAuth";
+import { useProducts } from "../../features/products/useProducts";
+import { useCart } from "../../hooks/useCart";
 import { supabaseClient } from "../../lib/supabaseClient";
+import { formatCurrency } from "../../utils/formatCurrency";
 import "./Shop.css";
-
-const featured = [
-  {
-    id: "a1",
-    name: "Aurum Wristwatch",
-    price: 3450,
-    image:
-      "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    id: "a2",
-    name: "Noir Leather Brief",
-    price: 2280,
-    image:
-      "https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    id: "a3",
-    name: "Classic Loafers",
-    price: 1310,
-    image:
-      "https://images.unsplash.com/photo-1614252369475-531eba835eb1?auto=format&fit=crop&w=1200&q=80",
-  },
-];
 
 const Shop = () => {
   const { user } = useAuth();
+  const { products, loading: productsLoading, error: productsError } = useProducts();
+  const { items, refresh, addItem } = useCart();
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const currency = useMemo(
-    () =>
-      new Intl.NumberFormat("en-GH", {
-        style: "currency",
-        currency: "GHS",
-        maximumFractionDigits: 0,
-      }),
-    []
-  );
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [addError, setAddError] = useState<string | null>(null);
+  const [addingProductId, setAddingProductId] = useState<string | null>(null);
+  const profileMenuRef = useRef<HTMLDivElement | null>(null);
+  const notificationsRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!user) return;
+    void refresh();
+  }, [refresh, user]);
+
+  useEffect(() => {
+    if (!isSearchOpen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsSearchOpen(false);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isSearchOpen]);
+
+  useEffect(() => {
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (profileMenuRef.current && !profileMenuRef.current.contains(target)) {
+        setIsProfileMenuOpen(false);
+      }
+      if (notificationsRef.current && !notificationsRef.current.contains(target)) {
+        setIsNotificationsOpen(false);
+      }
+    };
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => document.removeEventListener("pointerdown", handlePointerDown);
+  }, []);
 
   const handleSignOut = async () => {
     await supabaseClient.auth.signOut();
@@ -76,9 +84,74 @@ const Shop = () => {
         .join("") || "U",
     [userLabel]
   );
+  const cartCount = useMemo(
+    () => items.reduce((total, item) => total + item.quantity, 0),
+    [items]
+  );
+  const searchResults = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return products.slice(0, 12);
+    return products.filter((product) => {
+      const haystack = `${product.name} ${product.description ?? ""} ${product.slug}`.toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [products, searchQuery]);
+
+  const scrollToProducts = () => {
+    document.getElementById("shop-products")?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <main className="shop-page">
+      {isSearchOpen ? (
+        <div
+          className="shop-modal-backdrop"
+          role="presentation"
+          onClick={() => setIsSearchOpen(false)}
+        />
+      ) : null}
+      {isSearchOpen ? (
+        <div className="shop-search-modal" role="dialog" aria-label="Search products">
+          <div className="shop-search-modal-inner" onClick={(e) => e.stopPropagation()}>
+            <label className="shop-search-label">
+              <Search size={18} />
+              <input
+                type="search"
+                autoFocus
+                placeholder="Search by name or description..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </label>
+            <ul className="shop-search-results">
+              {searchResults.length === 0 ? (
+                <li className="shop-search-empty">No products match your search.</li>
+              ) : (
+                searchResults.map((product) => (
+                  <li key={product.id}>
+                    <button
+                      type="button"
+                      className="shop-search-result-row"
+                      onClick={() => {
+                        setIsSearchOpen(false);
+                        setSearchQuery("");
+                        document.getElementById(`product-${product.id}`)?.scrollIntoView({ behavior: "smooth" });
+                      }}
+                    >
+                      <span>{product.name}</span>
+                      <span>{formatCurrency(Number(product.price_ghs))}</span>
+                    </button>
+                  </li>
+                ))
+              )}
+            </ul>
+            <button type="button" className="shop-search-close" onClick={() => setIsSearchOpen(false)}>
+              Close
+            </button>
+          </div>
+        </div>
+      ) : null}
+
       <div className="shop-shell">
         <header className="shop-navbar">
           <div className="shop-logo-wrap">
@@ -89,12 +162,48 @@ const Shop = () => {
             </div>
           </div>
           <div className="shop-nav-actions">
-            <button type="button" className="shop-icon-only-btn" aria-label="Search">
+            <button
+              type="button"
+              className="shop-icon-only-btn"
+              aria-label="Search"
+              aria-expanded={isSearchOpen}
+              onClick={() => setIsSearchOpen((open) => !open)}
+            >
               <Search size={16} />
             </button>
-            <button type="button" className="shop-icon-only-btn" aria-label="Alerts">
-              <Bell size={16} />
-            </button>
+            <div className="shop-notifications-wrap" ref={notificationsRef}>
+              <button
+                type="button"
+                className="shop-icon-only-btn"
+                aria-label="Notifications"
+                aria-expanded={isNotificationsOpen}
+                onClick={() => setIsNotificationsOpen((open) => !open)}
+              >
+                <Bell size={16} />
+              </button>
+              {isNotificationsOpen ? (
+                <div className="shop-notifications-panel" role="menu">
+                  <p className="shop-notifications-title">Updates</p>
+                  {cartCount > 0 ? (
+                    <p className="shop-notifications-item">
+                      You have {cartCount} item{cartCount === 1 ? "" : "s"} in your cart.{" "}
+                      <Link to="/checkout" onClick={() => setIsNotificationsOpen(false)}>
+                        Go to checkout
+                      </Link>
+                    </p>
+                  ) : (
+                    <p className="shop-notifications-item">Your cart is empty. Browse products below.</p>
+                  )}
+                  <p className="shop-notifications-item muted">
+                    Tip: sign in to sync your cart and see order updates here.
+                  </p>
+                </div>
+              ) : null}
+            </div>
+            <Link to="/checkout" className="shop-icon-only-btn shop-cart-btn" aria-label="Cart and checkout">
+              <ShoppingCart size={16} />
+              {cartCount > 0 ? <span className="shop-cart-count">{cartCount}</span> : null}
+            </Link>
             <Link to="/" className="shop-icon-only-btn" aria-label="Home">
               <Home size={16} />
             </Link>
@@ -104,7 +213,7 @@ const Shop = () => {
               </Link>
             ) : null}
             {user ? (
-              <div className="shop-profile-menu-wrap">
+              <div className="shop-profile-menu-wrap" ref={profileMenuRef}>
                 <button
                   type="button"
                   className="shop-avatar-btn"
@@ -170,7 +279,7 @@ const Shop = () => {
               : "Browse premium collections as a guest, then sign in to unlock saved carts, order tracking, and member-only drops."}
           </p>
           <div className="shop-hero-actions">
-            <button type="button" className="shop-primary-btn">
+            <button type="button" className="shop-primary-btn" onClick={scrollToProducts}>
               <ShoppingBag size={16} /> Start Shopping
             </button>
             {user ? (
@@ -187,36 +296,71 @@ const Shop = () => {
 
         <section className="shop-stats-grid">
           <article>
-            <span>Collections</span>
-            <strong>42</strong>
+            <span>Active Products</span>
+            <strong>{products.length}</strong>
           </article>
           <article>
-            <span>New This Week</span>
-            <strong>17</strong>
+            <span>In Cart</span>
+            <strong>{cartCount}</strong>
           </article>
           <article>
-            <span>Avg Delivery</span>
-            <strong>24h</strong>
+            <span>Low Stock</span>
+            <strong>{products.filter((product) => product.stock <= 5).length}</strong>
           </article>
           <article>
-            <span>Member Savings</span>
-            <strong>Up to 18%</strong>
+            <span>Avg Price</span>
+            <strong>
+              {products.length
+                ? formatCurrency(
+                    products.reduce((sum, product) => sum + Number(product.price_ghs), 0) / products.length
+                  )
+                : formatCurrency(0)}
+            </strong>
           </article>
         </section>
 
-        <section className="shop-products-grid">
-          {featured.map((product) => (
-            <article key={product.id} className="shop-product-card">
-              <img src={product.image} alt={product.name} />
+        <section id="shop-products" className="shop-products-grid">
+          {productsLoading ? <div>Loading products...</div> : null}
+          {productsError ? <div>{productsError}</div> : null}
+          {addError ? <div>{addError}</div> : null}
+          {products.map((product) => (
+            <article key={product.id} id={`product-${product.id}`} className="shop-product-card">
+              <img
+                src={
+                  product.images[0] ??
+                  "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=1200&q=80"
+                }
+                alt={product.name}
+              />
               <div className="shop-product-meta">
                 <h3>{product.name}</h3>
-                <strong>{currency.format(product.price)}</strong>
-                <button type="button" className="shop-primary-btn">
-                  Add to Cart
+                <strong>{formatCurrency(Number(product.price_ghs))}</strong>
+                <button
+                  type="button"
+                  className="shop-primary-btn"
+                  disabled={!user || addingProductId === product.id}
+                  onClick={async () => {
+                    if (!user) {
+                      setAddError("Sign in to add products to cart.");
+                      return;
+                    }
+                    try {
+                      setAddError(null);
+                      setAddingProductId(product.id);
+                      await addItem(product.id, 1);
+                    } catch (error) {
+                      setAddError(error instanceof Error ? error.message : "Failed to add item");
+                    } finally {
+                      setAddingProductId(null);
+                    }
+                  }}
+                >
+                  {addingProductId === product.id ? "Adding..." : "Add to Cart"}
                 </button>
               </div>
             </article>
           ))}
+          {!productsLoading && products.length === 0 ? <div>No products available yet.</div> : null}
         </section>
       </div>
     </main>

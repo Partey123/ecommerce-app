@@ -23,3 +23,19 @@ export type AdminUser = {
   updated_at: string;
 };
 
+export type AdminOrderItem = {
+  id: string;
+  order_id: string;
+  product_id: string | null;
+  product_name: string;
+  quantity: number;
+  unit_price_ghs: number;
+  created_at: string;
+};
+
+export type AdminOrderDetailResponse = {
+  order: AdminOrder;
+  items: AdminOrderItem[];
+  user: AdminUser | null;
+};
+

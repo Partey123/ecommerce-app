@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { cartStore } from "../features/cart/cartStore";
 import type { CartState } from "../features/cart/cartTypes";
 import { cartService } from "../services/cartService";
@@ -15,7 +15,7 @@ export const useCart = () => {
     };
   }, []);
 
-  const getToken = async (): Promise<string> => {
+  const getToken = useCallback(async (): Promise<string> => {
     const {
       data: { session },
     } = await supabaseClient.auth.getSession();
@@ -23,9 +23,9 @@ export const useCart = () => {
       throw new Error("You must be signed in");
     }
     return session.access_token;
-  };
+  }, []);
 
-  const refresh = async () => {
+  const refresh = useCallback(async () => {
     setLoading(true);
     try {
       const token = await getToken();
@@ -34,8 +34,20 @@ export const useCart = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [getToken]);
 
-  return { ...cart, loading, refresh };
+  const addItem = useCallback(async (productId: string, quantity = 1) => {
+    const token = await getToken();
+    await cartService.addOrUpdateItem(token, productId, quantity);
+    await refresh();
+  }, [getToken, refresh]);
+
+  const removeItem = useCallback(async (productId: string) => {
+    const token = await getToken();
+    await cartService.removeItem(token, productId);
+    await refresh();
+  }, [getToken, refresh]);
+
+  return { ...cart, loading, refresh, addItem, removeItem };
 };
 
