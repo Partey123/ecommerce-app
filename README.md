@@ -1,47 +1,49 @@
 # LuxeMart eCommerce App
 
-Premium full-stack eCommerce monorepo built with React + Vite + TypeScript on the frontend, Express + TypeScript on the backend, and Supabase for authentication and database.
+LuxeMart is a full-stack ecommerce monorepo with a React + Vite client, Express API server, and Supabase for auth/data.
 
-## Tech Stack
+## Stack
 
-- Frontend: React, Vite, TypeScript, Framer Motion, Lucide
+- Frontend: React, TypeScript, Vite, React Router
 - Backend: Node.js, Express, TypeScript
 - Auth + DB: Supabase
-- Monorepo: npm workspaces
+- Monorepo: npm workspaces (`client`, `server`, `shared`)
 
-## Project Structure
+## Repository Layout
 
 ```text
-ecommerce app/
+ecommerce-app/
 ├── client/                  # React app
 ├── server/                  # Express API
-├── shared/                  # Shared TS types
+├── shared/                  # Shared TS types/constants
 ├── supabase/migrations/     # SQL migrations
-├── package.json             # Workspace scripts
-└── .gitignore
+├── package.json             # Root workspace scripts
+└── README.md
 ```
 
 ## Prerequisites
 
-- Node.js 20+ (recommended)
+- Node.js 20+
 - npm 10+
-- Supabase project (for auth/database)
+- Supabase project
 
-## Environment Variables
+## Environment Setup
 
-Create local env files from examples:
+Create env files from templates:
 
-- `client/.env.example` -> `client/.env` (or use root `.env` because Vite is configured with `envDir: ".."`).
+- `client/.env.example` -> `client/.env`
 - `server/.env.example` -> `server/.env`
 
-Required client vars:
+Vite is configured with `envDir: ".."`, so root-level `.env` values can also be read by the client.
+
+### Client vars
 
 ```env
 VITE_SUPABASE_URL=your_supabase_project_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-Required server vars:
+### Server vars
 
 ```env
 SUPABASE_URL=your_supabase_project_url
@@ -53,34 +55,44 @@ CLIENT_URL=http://localhost:5173
 PORT=5000
 ```
 
-Important security note:
+Security notes:
 
-- Never expose `SUPABASE_SERVICE_ROLE_KEY` to the browser.
-- Never prefix service role keys with `VITE_`.
+- Never expose `SUPABASE_SERVICE_ROLE_KEY` in client code.
+- Never prefix server secrets with `VITE_`.
 
 ## Install
-
-From repository root:
 
 ```bash
 npm install
 ```
 
-## Run Locally
+## Development
 
-Frontend:
+Run client:
 
 ```bash
 npm run dev
 ```
 
-Backend:
+Run server:
 
 ```bash
 npm run dev:server
 ```
 
-## Build
+## Quality Checks
+
+Lint:
+
+```bash
+npm run lint
+```
+
+Tests:
+
+```bash
+npm run test
+```
 
 Build all workspaces:
 
@@ -88,32 +100,24 @@ Build all workspaces:
 npm run build
 ```
 
-## Supabase Migrations
+## Database Migrations
 
-Migrations are in `supabase/migrations/`:
+Migrations live in `supabase/migrations/`.
 
-- `20260414133000_auth_and_profiles.sql`
-- `20260414133100_ecommerce_core.sql`
-
-Apply with Supabase CLI:
+Apply migrations with Supabase CLI:
 
 ```bash
 supabase db push
 ```
 
-## Auth Flows Implemented
+## CI
 
-- Email/password sign in
-- Email/password sign up
-- Google OAuth sign in/up
-- Password reset email flow
-- Supabase session listener + sign out
+GitHub Actions workflow: `.github/workflows/ci.yml`
 
-## GitHub Readiness Checklist
+Current pipeline validates:
 
-- `node_modules` ignored
-- env files ignored (`.env`, `.env.*`)
-- build artifacts ignored (`dist`, `build`, `coverage`)
-- logs and editor temp files ignored
-- committed env templates available (`.env.example`, `client/.env.example`, `server/.env.example`)
+- install (`npm ci`)
+- lint (`npm run lint`)
+- build (`npm run build`)
+- test (`npm run test`)
 

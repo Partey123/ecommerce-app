@@ -1,23 +1,11 @@
 import { useEffect, useState } from "react";
 import { supabaseClient } from "../lib/supabaseClient";
+import { getRoleFromUser } from "../utils/helpers";
 
 type UserState = {
   id: string;
   email: string | null;
   role: string;
-};
-
-const getUserRole = (user: {
-  app_metadata?: Record<string, unknown> | null;
-  user_metadata?: Record<string, unknown> | null;
-}) => {
-  const appRole = user.app_metadata?.role;
-  if (typeof appRole === "string") return appRole;
-
-  const userRole = user.user_metadata?.role;
-  if (typeof userRole === "string") return userRole;
-
-  return "user";
 };
 
 export const useUser = () => {
@@ -42,7 +30,7 @@ export const useUser = () => {
       setUser({
         id: authUser.id,
         email: authUser.email ?? null,
-        role: getUserRole(authUser),
+        role: getRoleFromUser(authUser),
       });
       setLoading(false);
     };
@@ -58,7 +46,7 @@ export const useUser = () => {
       setUser({
         id: authUser.id,
         email: authUser.email ?? null,
-        role: getUserRole(authUser),
+        role: getRoleFromUser(authUser),
       });
     });
 

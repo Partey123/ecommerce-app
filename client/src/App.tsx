@@ -24,14 +24,35 @@ import StoreSettings from "./pages/Admin/Settings/StoreSettings";
 import Profile from "./pages/Profile/Profile";
 import { useAuth } from "./features/auth/useAuth";
 import NotFound from "./pages/NotFound";
+import FullPageLoader from "./components/FullPageLoader";
 
 const getRole = (userRole?: string) => (userRole === "admin" ? "admin" : "user");
+
+const getDocumentTitle = (pathname: string) => {
+  if (pathname === "/") return "LuxeMart | Home";
+  if (pathname === "/dashboard") return "LuxeMart | Dashboard";
+  if (pathname.startsWith("/shop")) return "LuxeMart | Shop";
+  if (pathname.startsWith("/checkout")) return "LuxeMart | Checkout";
+  if (pathname.startsWith("/profile")) return "LuxeMart | Profile";
+  if (pathname === "/auth" || pathname.startsWith("/auth/signin")) return "LuxeMart | Sign In";
+  if (pathname.startsWith("/auth/signup")) return "LuxeMart | Sign Up";
+  if (pathname.startsWith("/auth/reset-password")) return "LuxeMart | Reset Password";
+  if (pathname.startsWith("/auth/verify")) return "LuxeMart | Verification";
+  if (pathname === "/admin") return "LuxeMart | Admin";
+  if (pathname.startsWith("/admin/products")) return "LuxeMart | Admin Products";
+  if (pathname.startsWith("/admin/orders")) return "LuxeMart | Admin Orders";
+  if (pathname.startsWith("/admin/users")) return "LuxeMart | Admin Users";
+  if (pathname.startsWith("/admin/categories")) return "LuxeMart | Admin Categories";
+  if (pathname.startsWith("/admin/analytics")) return "LuxeMart | Admin Analytics";
+  if (pathname.startsWith("/admin/settings")) return "LuxeMart | Admin Settings";
+  return "LuxeMart | Not Found";
+};
 
 const DashboardRoute = () => {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {
-    return <div style={{ padding: "2rem" }}>Loading dashboard...</div>;
+    return <FullPageLoader label="Loading dashboard..." />;
   }
 
   if (!user) {
@@ -50,10 +71,20 @@ const HomeRoute = () => {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {
-    return <div style={{ padding: "2rem" }}>Loading...</div>;
+    return <FullPageLoader label="Loading home..." />;
   }
 
   return user ? <Navigate to="/dashboard" replace /> : <Landing />;
+};
+
+const DocumentTitle = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    document.title = getDocumentTitle(location.pathname);
+  }, [location.pathname]);
+
+  return null;
 };
 
 const RoleChangeRedirect = () => {
@@ -99,6 +130,7 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <DocumentTitle />
         <RoleChangeRedirect />
         <Routes>
           <Route path="/" element={<HomeRoute />} />

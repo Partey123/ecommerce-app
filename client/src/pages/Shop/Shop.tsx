@@ -101,6 +101,23 @@ const Shop = () => {
     document.getElementById("shop-products")?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const handleAddToCart = async (productId: string) => {
+    if (!user) {
+      setAddError("Sign in to add products to cart.");
+      return;
+    }
+
+    try {
+      setAddError(null);
+      setAddingProductId(productId);
+      await addItem(productId, 1);
+    } catch (error) {
+      setAddError(error instanceof Error ? error.message : "Failed to add item");
+    } finally {
+      setAddingProductId(null);
+    }
+  };
+
   return (
     <main className="shop-page">
       {isSearchOpen ? (
@@ -217,6 +234,8 @@ const Shop = () => {
                 <button
                   type="button"
                   className="shop-avatar-btn"
+                  aria-haspopup="menu"
+                  aria-expanded={isProfileMenuOpen}
                   onClick={() => setIsProfileMenuOpen((previous) => !previous)}
                 >
                   <span className="shop-avatar-pill">{avatarText}</span>
@@ -320,11 +339,22 @@ const Shop = () => {
         </section>
 
         <section id="shop-products" className="shop-products-grid">
-          {productsLoading ? <div>Loading products...</div> : null}
-          {productsError ? <div>{productsError}</div> : null}
-          {addError ? <div>{addError}</div> : null}
+          {productsLoading ? <div className="shop-state-message">Loading products...</div> : null}
+          {productsError ? <div className="shop-state-message shop-state-error">{productsError}</div> : null}
+          {addError ? <div className="shop-state-message shop-state-error">{addError}</div> : null}
           {products.map((product) => (
-            <article key={product.id} id={`product-${product.id}`} className="shop-product-card">
+            <article
+              key={product.id}
+              id={`product-${product.id}`}
+              className="shop-product-card"
+              tabIndex={0}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  void handleAddToCart(product.id);
+                }
+              }}
+            >
               <img
                 src={
                   product.images[0] ??
@@ -339,28 +369,16 @@ const Shop = () => {
                   type="button"
                   className="shop-primary-btn"
                   disabled={!user || addingProductId === product.id}
-                  onClick={async () => {
-                    if (!user) {
-                      setAddError("Sign in to add products to cart.");
-                      return;
-                    }
-                    try {
-                      setAddError(null);
-                      setAddingProductId(product.id);
-                      await addItem(product.id, 1);
-                    } catch (error) {
-                      setAddError(error instanceof Error ? error.message : "Failed to add item");
-                    } finally {
-                      setAddingProductId(null);
-                    }
-                  }}
+                  onClick={() => void handleAddToCart(product.id)}
                 >
                   {addingProductId === product.id ? "Adding..." : "Add to Cart"}
                 </button>
               </div>
             </article>
           ))}
-          {!productsLoading && products.length === 0 ? <div>No products available yet.</div> : null}
+          {!productsLoading && products.length === 0 ? (
+            <div className="shop-state-message">No products available yet.</div>
+          ) : null}
         </section>
       </div>
     </main>

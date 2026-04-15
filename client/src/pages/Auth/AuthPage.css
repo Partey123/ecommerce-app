@@ -58,6 +58,12 @@
   color: #f4f4f5;
 }
 
+.auth-card-animate {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: auth-card-enter 0.4s ease forwards;
+}
+
 .auth-toggle-wrap {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -125,6 +131,34 @@
 
 .auth-form input::placeholder {
   color: #a1a1aa;
+}
+
+.auth-password-strength {
+  margin-top: -0.15rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.auth-password-strength-bars {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.3rem;
+}
+
+.auth-password-strength-bars span {
+  height: 0.3rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.auth-password-strength-bars span.is-active {
+  background: linear-gradient(90deg, #f59e0b, #10b981);
+}
+
+.auth-password-strength small {
+  color: #cbd5e1;
+  font-size: 0.8rem;
+  line-height: 1.4;
 }
 
 .auth-otp-row {
@@ -228,4 +262,11 @@
   background: rgba(16, 185, 129, 0.18);
   border: 1px solid rgba(52, 211, 153, 0.42);
   color: #a7f3d0;
+}
+
+@keyframes auth-card-enter {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

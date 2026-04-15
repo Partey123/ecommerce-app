@@ -132,6 +132,28 @@
   line-height: 1.7;
 }
 
+.landing-fade-up {
+  opacity: 0;
+  transform: translateY(24px);
+  animation: landing-fade-up 0.55s ease forwards;
+}
+
+.landing-delay-1 {
+  animation-delay: 0s;
+}
+
+.landing-delay-2 {
+  animation-delay: 0.05s;
+}
+
+.landing-delay-3 {
+  animation-delay: 0.1s;
+}
+
+.landing-delay-4 {
+  animation-delay: 0.15s;
+}
+
 .landing-cta-row {
   margin-top: 1.8rem;
   display: flex;
@@ -374,5 +396,12 @@
   .landing-product-card.wide {
     grid-column: span 1;
     grid-row: span 1;
+  }
+}
+
+@keyframes landing-fade-up {
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

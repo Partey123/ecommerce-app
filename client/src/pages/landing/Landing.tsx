@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import { motion } from "framer-motion";
 import {
   Headset,
   ShieldCheck,
@@ -11,11 +10,6 @@ import { Link } from "react-router-dom";
 import "./Landing.css";
 import { useAuth } from "../../features/auth/useAuth";
 import { supabaseClient } from "../../lib/supabaseClient";
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0 },
-};
 
 const products = [
   { id: 1, name: "Italian Leather Weekender", price: 3490, image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1200&q=80", large: true },
@@ -69,50 +63,27 @@ const Landing = () => {
       </header>
 
       <section className="landing-hero" id="top">
-        <motion.p
-          className="landing-kicker"
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          transition={{ duration: 0.45 }}
-        >
+        <p className="landing-kicker landing-fade-up landing-delay-1">
           Curated Luxury Essentials
-        </motion.p>
+        </p>
 
-        <motion.h1
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          transition={{ duration: 0.55, delay: 0.05 }}
-        >
+        <h1 className="landing-fade-up landing-delay-2">
           Elevate Your <em>Lifestyle</em>
-        </motion.h1>
+        </h1>
 
-        <motion.p
-          className="landing-subtitle"
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          transition={{ duration: 0.55, delay: 0.1 }}
-        >
+        <p className="landing-subtitle landing-fade-up landing-delay-3">
           Discover refined pieces designed for modern living, selected from
           world-class makers with the quality you can feel.
-        </motion.p>
+        </p>
 
-        <motion.div
-          className="landing-cta-row"
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          transition={{ duration: 0.5, delay: 0.15 }}
-        >
+        <div className="landing-cta-row landing-fade-up landing-delay-4">
           <Link className="landing-pill-btn landing-pill-btn-primary" to="/shop">
             Shop Now
           </Link>
           <a className="landing-pill-btn landing-pill-btn-secondary" href="#categories">
             Explore Categories
           </a>
-        </motion.div>
+        </div>
       </section>
 
       <section className="landing-value-grid" id="benefits">

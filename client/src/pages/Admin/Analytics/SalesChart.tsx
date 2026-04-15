@@ -1,6 +1,15 @@
 import { useMemo } from "react";
 import { useAdminOrders } from "../../../features/admin/useAdminOrders";
 import { formatCurrency } from "../../../utils/formatCurrency";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 const SalesChart = () => {
   const { orders, loading, error } = useAdminOrders();
@@ -27,8 +36,6 @@ const SalesChart = () => {
     return dayBuckets;
   }, [orders]);
 
-  const maxValue = Math.max(...last7Days.map((day) => day.value), 1);
-
   return (
     <section>
       <h2>Analytics</h2>
@@ -36,20 +43,21 @@ const SalesChart = () => {
       {loading ? <div className="admin-empty">Loading chart data...</div> : null}
       {error ? <div className="admin-empty">{error}</div> : null}
       <div className="admin-card" style={{ marginTop: "1rem" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(7,1fr)", gap: "0.6rem", alignItems: "end", height: "220px" }}>
-          {last7Days.map((day) => (
-            <div key={day.key} style={{ textAlign: "center" }}>
-              <div
-                style={{
-                  height: `${Math.max((day.value / maxValue) * 180, 4)}px`,
-                  background: "linear-gradient(180deg,#0f172a,#334155)",
-                  borderRadius: "0.6rem 0.6rem 0.2rem 0.2rem",
-                }}
-                title={formatCurrency(day.value)}
+        <div style={{ width: "100%", height: 280 }}>
+          <ResponsiveContainer>
+            <BarChart data={last7Days} margin={{ top: 8, right: 12, left: 0, bottom: 8 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+              <XAxis dataKey="label" stroke="#64748b" tickLine={false} axisLine={false} />
+              <YAxis
+                stroke="#64748b"
+                tickLine={false}
+                axisLine={false}
+                tickFormatter={(value) => `GHS ${Number(value).toLocaleString()}`}
               />
-              <small>{day.label}</small>
-            </div>
-          ))}
+              <Tooltip formatter={(value) => formatCurrency(Number(value))} />
+              <Bar dataKey="value" fill="#0f172a" radius={[8, 8, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
         <p style={{ marginTop: "0.75rem" }}>
           Total (7 days):{" "}

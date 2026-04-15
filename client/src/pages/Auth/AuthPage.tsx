@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import "./AuthPage.css";
@@ -7,6 +6,7 @@ import { supabaseClient } from "../../lib/supabaseClient";
 import { useAuth } from "../../features/auth/useAuth";
 
 type AuthMode = "signin" | "signup";
+const MIN_PASSWORD_LENGTH = 10;
 
 type AuthPageProps = {
   initialMode?: AuthMode;
@@ -43,6 +43,22 @@ const AuthPage = ({ initialMode = "signin" }: AuthPageProps) => {
     [mode]
   );
 
+  const passwordStrength = useMemo(() => {
+    const value = password.trim();
+    if (!value.length) return { label: "Enter a password", score: 0 };
+
+    let score = 0;
+    if (value.length >= MIN_PASSWORD_LENGTH) score += 1;
+    if (/[A-Z]/.test(value)) score += 1;
+    if (/[a-z]/.test(value)) score += 1;
+    if (/\d/.test(value)) score += 1;
+    if (/[^A-Za-z0-9]/.test(value)) score += 1;
+
+    if (score <= 2) return { label: "Weak", score };
+    if (score <= 4) return { label: "Good", score };
+    return { label: "Strong", score };
+  }, [password]);
+
   const clearMessages = () => {
     setErrorMessage("");
     setSuccessMessage("");
@@ -60,6 +76,11 @@ const AuthPage = ({ initialMode = "signin" }: AuthPageProps) => {
 
     try {
       if (mode === "signup") {
+        if (password.length < MIN_PASSWORD_LENGTH) {
+          setErrorMessage(`Use at least ${MIN_PASSWORD_LENGTH} characters for your password.`);
+          return;
+        }
+
         if (password !== confirmPassword) {
           setErrorMessage("Passwords do not match.");
           return;
@@ -129,12 +150,7 @@ const AuthPage = ({ initialMode = "signin" }: AuthPageProps) => {
         <div className="auth-brand">LuxeMart</div>
       </header>
 
-      <motion.section
-        className="auth-card"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-      >
+      <section className="auth-card auth-card-animate">
         <div className="auth-toggle-wrap">
           <button
             className={`auth-toggle ${mode === "signin" ? "active" : ""}`}
@@ -187,9 +203,27 @@ const AuthPage = ({ initialMode = "signin" }: AuthPageProps) => {
               placeholder="Enter your password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
+              minLength={mode === "signup" ? MIN_PASSWORD_LENGTH : undefined}
+              aria-describedby={mode === "signup" ? "password-strength-hint" : undefined}
               required
             />
           </label>
+          {mode === "signup" ? (
+            <div id="password-strength-hint" className="auth-password-strength" aria-live="polite">
+              <div className="auth-password-strength-bars" aria-hidden="true">
+                {[1, 2, 3, 4, 5].map((value) => (
+                  <span
+                    key={value}
+                    className={value <= passwordStrength.score ? "is-active" : ""}
+                  />
+                ))}
+              </div>
+              <small>
+                Strength: {passwordStrength.label}. Use at least {MIN_PASSWORD_LENGTH} characters
+                with mixed letters, numbers, and symbols.
+              </small>
+            </div>
+          ) : null}
 
           {mode === "signup" && (
             <label>
@@ -235,7 +269,7 @@ const AuthPage = ({ initialMode = "signin" }: AuthPageProps) => {
           <span className="auth-google-icon">G</span>
           {mode === "signin" ? "Sign in with Google" : "Sign up with Google"}
         </button>
-      </motion.section>
+      </section>
     </main>
   );
 };

@@ -160,31 +160,31 @@ Things that work but are fragile or will cause pain at scale.
 
 ## Phase 5 — UX & Accessibility
 
-- [ ] **Admin route guard shows a plain `<div>` during load** — "Loading admin area..." has no styling. Use a proper skeleton or spinner.
-- [ ] **`DashboardRoute` and `HomeRoute` also show unstyled loading divs** — Consistent loading treatment needed across the app.
-- [ ] **Profile page has no loading skeleton** — Shows "Loading profile..." as plain text.
-- [ ] **No `<title>` tags on any page** — Browser tab always shows the default Vite title.
-- [ ] **No 404 page** — The catch-all `*` route redirects to `/` instead of showing a friendly 404.
-- [ ] **`NotFound.tsx` exists but is never used** — The wildcard route should render `<NotFound />` not redirect.
-- [ ] **Shop product cards have no keyboard navigation** — "Add to Cart" buttons aren't focusable in a meaningful sequence.
-- [ ] **Shop profile menu has no close-on-outside-click handler** — The dropdown stays open if the user clicks elsewhere.
-- [ ] **No empty state UI** — When product lists or order lists are empty, nothing tells the user.
-- [ ] **Auth form has no password strength indicator** — No minimum length enforced client-side (Supabase default is 6 chars, which is weak).
-- [ ] **`SalesChart.tsx` is not a real chart** — It's hand-drawn `<div>` bars with hardcoded heights. No axis labels, no values, no tooltips. Should use `recharts` or similar.
+- [x] **Admin route guard shows a plain `<div>` during load** — Replaced with a reusable full-page loader with spinner.
+- [x] **`DashboardRoute` and `HomeRoute` also show unstyled loading divs** — Updated to the same loading component for consistent UX.
+- [x] **Profile page has no loading skeleton** — Uses full-page loader state while auth session is resolving.
+- [x] **No `<title>` tags on any page** — Added route-aware document titles across app/auth/admin routes.
+- [x] **No 404 page** — Catch-all route renders a friendly 404 page.
+- [x] **`NotFound.tsx` exists but is never used** — Wildcard routing now points to `<NotFound />`.
+- [x] **Shop product cards have no keyboard navigation** — Cards are keyboard-focusable and support Enter/Space add-to-cart.
+- [x] **Shop profile menu has no close-on-outside-click handler** — Outside click handler is present and closes the dropdown.
+- [x] **No empty state UI** — Added explicit empty/error/loading state cards for shop product listings.
+- [x] **Auth form has no password strength indicator** — Added strength meter plus client-side minimum length validation.
+- [x] **`SalesChart.tsx` is not a real chart** — Replaced custom bars with `recharts` chart including axes and tooltip.
 
 ---
 
 ## Phase 6 — Tech Debt & Nice-to-Haves
 
-- [ ] **`react.svg` and `vite.svg` in `src/assets/`** — Leftover from `create-vite` scaffold. Not used anywhere. Delete.
-- [ ] **`hero.png` (44KB)** — Used only in `landing/` styles. Should be converted to WebP and served via a CDN rather than bundled.
-- [ ] **`framer-motion` is a large dep used in one place** — Only `AuthPage.tsx` uses it for a simple fade-in. Consider replacing with a CSS transition to save ~100KB.
-- [ ] **No `react-query` / `tanstack-query`** — All data fetching will need manual loading/error/refetch state management. Adding TanStack Query early saves a lot of boilerplate.
-- [ ] **`lucide-react@1.8.0`** — This version is pinned unusually high (latest stable as of April 2026 is around 0.4xx). Verify this resolves correctly and isn't a version typo.
-- [ ] **No test setup** — No Vitest, no Testing Library, no Playwright. At minimum add unit tests for `getRoleFromUser()` and the Paystack HMAC helper before those go live.
-- [ ] **No CI pipeline** — No GitHub Actions or similar to run `lint` and `build` on PRs.
-- [ ] **`README.md` is the default Create React App readme** — Replace with actual project setup instructions covering the Supabase migration, env vars, and workspace commands.
-- [ ] **Monorepo `package.json` has empty `author` field** — Minor, but worth filling in.
+- [x] **`react.svg` and `vite.svg` in `src/assets/`** — Not present in the current client workspace.
+- [x] **`hero.png` (44KB)** — Not present in the current client workspace (landing uses remote image URLs).
+- [x] **`framer-motion` is a large dep used in one place** — Removed package and replaced motion-based fades with CSS animations.
+- [x] **No `react-query` / `tanstack-query`** — Added TanStack Query with a shared `QueryClient` and provider wiring in app bootstrap.
+- [x] **`lucide-react@1.8.0`** — Verified with npm registry that `1.8.0` is currently the latest published version.
+- [x] **No test setup** — Added Vitest scripts and unit tests for `getRoleFromUser()` and Paystack HMAC helper behavior.
+- [x] **No CI pipeline** — Added GitHub Actions workflow to run install, lint, build, and tests on PRs/pushes.
+- [x] **`README.md` is the default Create React App readme** — Replaced with project-specific setup docs.
+- [x] **Monorepo `package.json` has empty `author` field** — Filled author field in the root workspace package.
 
 ---
 

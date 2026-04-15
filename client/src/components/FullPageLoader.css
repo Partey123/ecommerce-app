@@ -1,0 +1,39 @@
+.full-page-loader {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: linear-gradient(180deg, #09090b 0%, #111827 100%);
+}
+
+.full-page-loader-card {
+  width: min(340px, 100%);
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+  display: grid;
+  justify-items: center;
+  gap: 0.65rem;
+  padding: 1.2rem;
+}
+
+.full-page-loader-card p {
+  margin: 0;
+  color: #cbd5e1;
+}
+
+.full-page-loader-spinner {
+  width: 1.7rem;
+  height: 1.7rem;
+  border: 2px solid rgba(148, 163, 184, 0.38);
+  border-top-color: #f8fafc;
+  border-radius: 999px;
+  animation: full-page-loader-spin 0.8s linear infinite;
+}
+
+@keyframes full-page-loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

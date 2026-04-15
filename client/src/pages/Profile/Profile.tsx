@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { useAuth } from "../../features/auth/useAuth";
 import { useOrders } from "../../features/orders/useOrders";
 import { formatCurrency } from "../../utils/formatCurrency";
+import FullPageLoader from "../../components/FullPageLoader";
 import "./Profile.css";
 
 const Profile = () => {
@@ -28,7 +29,7 @@ const Profile = () => {
   }, [user]);
 
   if (isLoading) {
-    return <main className="profile-page">Loading profile...</main>;
+    return <FullPageLoader label="Loading profile..." />;
   }
 
   if (!user) {
